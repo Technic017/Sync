@@ -9,6 +9,10 @@
 #########################################
 
 import os
+import shutil
+
+# STALE
+FOLDERY = ("./TEST_PC", "./TEST_DYSK")
 
 class FolderComparer:
 
@@ -32,7 +36,26 @@ class FolderComparer:
 
         return files_to_sync
 
+    def exists_folder(self):
+        return os.path.exists(self.folder1)
+    
+    def folder_synchronisation(self):
+        missing_files = self.get_files_to_sync()
+        for file_info in missing_files:
+            if file_info[0] == 1:
+                source_file = os.path.join(self.folder0, file_info[1])
+                destination_file = os.path.join(self.folder1, file_info[1])
+                shutil.copy(source_file, destination_file)
+                
+            if file_info[0] == 0:
+                source_file = os.path.join(self.folder1, file_info[1])
+                destination_file = os.path.join(self.folder0, file_info[1])
+                shutil.copy(source_file, destination_file)
+        return
+
+
 if __name__ == "__main__":
-    comparer = FolderComparer("./TEST_PC", "./TEST_DYSK")
-    files_to_sync = comparer.get_files_to_sync()
-    print(files_to_sync)
+    comparer = FolderComparer(FOLDERY[0], FOLDERY[1])
+    if comparer.exists_folder():
+        files_to_sync = comparer.get_files_to_sync()
+        print(files_to_sync)
