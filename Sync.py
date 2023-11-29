@@ -40,18 +40,22 @@ class FolderComparer:
         return os.path.exists(self.folder1)
     
     def folder_synchronisation(self):
+        copiedFromPc = []
+        copiedFromDrive = []
         missing_files = self.get_files_to_sync()
         for file_info in missing_files:
             if file_info[0] == 1:
                 source_file = os.path.join(self.folder0, file_info[1])
                 destination_file = os.path.join(self.folder1, file_info[1])
                 shutil.copy(source_file, destination_file)
+                copiedFromPc.append(file_info)
                 
             if file_info[0] == 0:
                 source_file = os.path.join(self.folder1, file_info[1])
                 destination_file = os.path.join(self.folder0, file_info[1])
                 shutil.copy(source_file, destination_file)
-        return
+                copiedFromDrive.append(file_info)
+        return copiedFromPc, copiedFromDrive
 
 
 if __name__ == "__main__":
